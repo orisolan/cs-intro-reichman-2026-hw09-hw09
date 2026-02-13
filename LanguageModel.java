@@ -78,30 +78,32 @@ public class LanguageModel {
         return probs.get(probs.getSize() - 1).chr;
     }
 
-    public String generate(String initialText, int textLength) {
-        if (initialText.length() < windowLength) {
-            return initialText;
-        }
-
-        StringBuilder generatedText = new StringBuilder(initialText);
-        String window = initialText.substring(initialText.length() - windowLength);
-
-        while (generatedText.length() < textLength) {
-            List probs = CharDataMap.get(window);
-            
-            if (probs == null) {
-                break;
-            }
-
-            char nextChar = getRandomChar(probs);
-            generatedText.append(nextChar);
-            
-            window = generatedText.substring(generatedText.length() - windowLength);
-        }
-
-        return generatedText.toString();
+   public String generate(String initialText, int textLength) {
+    // אם הטקסט ההתחלתי קצר מאורך החלון, אין לנו מאיפה להתחיל
+    if (initialText.length() < windowLength) {
+        return initialText;
     }
 
+    StringBuilder generatedText = new StringBuilder(initialText);
+    String window = initialText.substring(initialText.length() - windowLength);
+
+    int totalTargetLength = initialText.length() + textLength;
+
+    while (generatedText.length() < totalTargetLength) {
+        List probs = CharDataMap.get(window);
+        
+        if (probs == null) {
+            break;
+        }
+
+        char nextChar = getRandomChar(probs);
+        generatedText.append(nextChar);
+        
+        window = generatedText.substring(generatedText.length() - windowLength);
+    }
+
+    return generatedText.toString();
+}
     public String toString() {
         StringBuilder str = new StringBuilder();
         for (String key : CharDataMap.keySet()) {
