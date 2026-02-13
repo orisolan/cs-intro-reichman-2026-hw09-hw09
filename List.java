@@ -133,6 +133,6 @@ public class List {
             current = current.next;
             i++;
         }
-        return new ListIterator(current);
+        return new ListIterator(current); 
     }
 }
